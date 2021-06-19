@@ -67,13 +67,13 @@ unsigned char get(){
 	osSemaphoreWait(item_semaphore, osWaitForever); // wait for item
 	osMutexWait(x_mutex, osWaitForever); // guarantee the atomic (protect critical section)
 	item = buffer[removePtr]; // get item and store to variable "item"
-	removePtr = (removePtr + 1) % N; // %N is used mainly to provide circular structure (7->0)
+	removePtr = (removePtr + 1) % N; // %N is used mainly to provide circular structure (7->0) 
 	osMutexRelease(x_mutex);
 	osSemaphoreRelease(space_semaphore);
 	return item;
 }
 
-int loopcount = 10;
+int loopcount = 26;
 
 /*----------------------------------------------------------------------------
 Producer Thread (item insert from A-Z)
@@ -99,9 +99,7 @@ void Consumer_Thread (void const *argument)
 		SendChar('\n');
 	}
 }
-/*----------------------------------------------------------------------------
-main function
-*----------------------------------------------------------------------------*/
+
 int main (void) 
 {
 	osKernelInitialize ();                    // initialize CMSIS-RTOS
@@ -114,7 +112,5 @@ int main (void)
 	T_x2 = osThreadCreate(osThread(Consumer_Thread), NULL); // consumer
  
 	osKernelStart ();                         // start thread execution 
-		
 }
-
 

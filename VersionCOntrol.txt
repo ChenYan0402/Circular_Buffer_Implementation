@@ -1,0 +1,4 @@
+1. git init
+2. git remote add origin https://github.com/ChenYan0402/Circular_Buffer_Implementation.git
+3. git fetch
+3. git log --all
