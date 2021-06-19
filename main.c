@@ -24,7 +24,7 @@ long int x=0;
 long int i=0;
 long int j=0;
 
-// Structure of the circular buffer (contain 8 spaces)
+// Structure of the circular buffer (contain 8 spaces)//
 const unsigned int N = 7; 
 unsigned char buffer[N]; 
 unsigned int insertPtr = 0; //increase insertPtr when item is put into buffer
