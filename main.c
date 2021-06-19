@@ -30,14 +30,23 @@ unsigned char buffer[N];
 unsigned int insertPtr = 0; //increase insertPtr when item is put into buffer
 unsigned int removePtr = 0; // increase removedPtr when item is get from buffer
 
+
+/*----------------------------------------------------------------------------
+// initialise variable for storing the item get from buffer
+*----------------------------------------------------------------------------*/
+unsigned int P = 0x50;
+unsigned int u = 0x75;
+unsigned int t = 0x74;
+unsigned int sym = 0x3A;
+unsigned int item = 0x00; 
+unsigned int G = 0x47;
+unsigned int e = 0x65;
+
+
 /*----------------------------------------------------------------------------
 Producer insert item to circular buffer
 *----------------------------------------------------------------------------*/
 void put(unsigned char an_item){
-	unsigned int P = 0x50;
-	unsigned int u = 0x75;
-	unsigned int t = 0x74;
-	unsigned int sym = 0x3A;
 	osSemaphoreWait(space_semaphore, osWaitForever); // wait for empty space
 	osMutexWait(x_mutex, osWaitForever); // guarantee the atomic (protect critical section)
 	buffer[insertPtr] = an_item; // insert item
@@ -56,11 +65,6 @@ void put(unsigned char an_item){
 Consumer get item from circular buffer
 *----------------------------------------------------------------------------*/
 unsigned char get(){
-	unsigned int item = 0x00; // initialise variable for storing the item get from buffer
-	unsigned int G = 0x47;
-	unsigned int e = 0x65;
-	unsigned int t = 0x74;
-	unsigned int sym = 0x3A;
 	osSemaphoreWait(item_semaphore, osWaitForever); // wait for item
 	osMutexWait(x_mutex, osWaitForever); // guarantee the atomic (protect critical section)
 	item = buffer[removePtr]; // get item and store to variable "item"
