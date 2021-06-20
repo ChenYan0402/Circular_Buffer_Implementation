@@ -119,10 +119,10 @@ void put(unsigned char an_item){
 	osMutexWait(x_mutex, osWaitForever); // guarantee the atomic (protect critical section)
 	buffer[insertPtr] = an_item; // insert item
 	insertPtr = (insertPtr + 1) % N; // %N is used mainly to provide circular structure (7->0)
-	SendChar('P');
-	SendChar(sym);
-	SendChar(an_item);
-	SendChar('\n');
+	//SendChar('P');
+	//SendChar(sym);
+	//SendChar(an_item);
+	//SendChar('\n');
 	osMutexRelease(x_mutex);
 	osSemaphoreRelease(item_semaphore);
 }
@@ -159,6 +159,8 @@ void Consumer_Thread (void const *argument)
 {
 	for(j=0; j<loopcount; j++){
 		unsigned int data = 0x00;
+		long int check = 0;
+		check = j%8;
 		
 		data = get();
 		OUTPUT[j] = data ;
@@ -166,8 +168,15 @@ void Consumer_Thread (void const *argument)
 		SendChar(sym);
 		SendChar(data);
 		SendChar('\n');	
+		
+		if (data==buffer[check]) // test for value get from queue same with item put into queue
+		{
+			SendChar('o');
+			SendChar('k');
+			SendChar('\n');
+		}
 	}
-	check_in_out(INPUT,OUTPUT); // test for value get from queue is same as value put into queue
+	check_in_out(INPUT,OUTPUT);
 }
 /*----------------------------------------------------------------------------
 main function
