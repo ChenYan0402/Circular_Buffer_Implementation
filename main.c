@@ -95,9 +95,9 @@ void check_in_out(unsigned char *in,unsigned char *out)
 	if (check_flag == 0)
 	{
 		SendChar('D');
-		SendChar('i');
-		SendChar('f');
-		SendChar('f');
+		SendChar('I');
+		SendChar('F');
+		SendChar('F');
 		SendChar('\n');
 	}
 	else
