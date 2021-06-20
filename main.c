@@ -95,15 +95,15 @@ void check_in_out(unsigned char *in,unsigned char *out)
 	if (check_flag == 0)
 	{
 		SendChar('D');
-		SendChar('I');
-		SendChar('F');
-		SendChar('F');
+		SendChar('i');
+		SendChar('f');
+		SendChar('f');
 		SendChar('\n');
 	}
 	else
 	{
 		SendChar('S');
-		SendChar('A');
+		SendChar('a');
 		SendChar('M');
 		SendChar('E');
 		SendChar('\n');
