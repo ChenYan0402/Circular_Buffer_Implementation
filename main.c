@@ -103,7 +103,7 @@ void check_in_out(unsigned char *in,unsigned char *out)
 	else
 	{
 		SendChar('S');
-		SendChar('a');
+		SendChar('A');
 		SendChar('M');
 		SendChar('E');
 		SendChar('\n');
