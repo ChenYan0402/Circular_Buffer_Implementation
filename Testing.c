@@ -45,6 +45,9 @@ long int i=0;
 long int j=0;
 unsigned int sym = 0x3A;
 
+
+// TESTING````````````````````````````````````````````````````````````````````````
+
 // Structure of the circular buffer (contain 8 spaces)
 const unsigned int N = 8; 
 unsigned char buffer[N]; 
