@@ -5,22 +5,28 @@
 #include "cmsis_os.h"
 #include "uart.h"
 
+//#define FULL_Buffer
+#define EMPTY_Buffer
+
 void Producer_Thread (void const *argument);
 void Consumer_Thread (void const *argument);
+
+#ifdef FULL_Buffer
 /*----------------------------------------------------------------------------
 	Test for full buffer condition
 *----------------------------------------------------------------------------*/
-//osThreadDef(Producer_Thread, osPriorityHigh, 1, 0);
-//osThreadDef(Consumer_Thread, osPriorityNormal, 1, 0);
-
+osThreadDef(Producer_Thread, osPriorityHigh, 1, 0);
+osThreadDef(Consumer_Thread, osPriorityNormal, 1, 0);
+#elif defined(EMPTY_Buffer)
 /*----------------------------------------------------------------------------
 	Test for empty buffer condition
 *----------------------------------------------------------------------------*/
-//osThreadDef(Producer_Thread, osPriorityNormal, 1, 0);
-//osThreadDef(Consumer_Thread, osPriorityHigh, 1, 0);
-
+osThreadDef(Producer_Thread, osPriorityNormal, 1, 0);
+osThreadDef(Consumer_Thread, osPriorityHigh, 1, 0);
+#else
 osThreadDef(Producer_Thread, osPriorityNormal, 1, 0);
 osThreadDef(Consumer_Thread, osPriorityNormal, 1, 0);
+#endif
 
 osThreadId T_x1; // Thread ID
 osThreadId T_x2; // Thread ID
@@ -32,11 +38,9 @@ osSemaphoreDef(item_semaphore); // Semaphore definition
 osSemaphoreId space_semaphore; // Semaphore ID
 osSemaphoreDef(space_semaphore); // Semaphore definition
 
-
-
 // Input SET HERE
-unsigned char INPUT[14] = "OUR_FIRST_TRY";
-#define INPUT_SIZE 14
+#define INPUT_SIZE 13
+unsigned char INPUT[INPUT_SIZE] = "OUR_FIRST_TRY";
 // Output Receive
 unsigned char OUTPUT[INPUT_SIZE];
 
@@ -119,10 +123,6 @@ void put(unsigned char an_item){
 	osMutexWait(x_mutex, osWaitForever); // guarantee the atomic (protect critical section)
 	buffer[insertPtr] = an_item; // insert item
 	insertPtr = (insertPtr + 1) % N; // %N is used mainly to provide circular structure (7->0)
-	//SendChar('P');
-	//SendChar(sym);
-	//SendChar(an_item);
-	//SendChar('\n');
 	osMutexRelease(x_mutex);
 	osSemaphoreRelease(item_semaphore);
 }
@@ -141,41 +141,28 @@ unsigned char get(){
 	return item;
 }
 
-int loopcount = INPUT_SIZE;
-
 /*----------------------------------------------------------------------------
-Producer Thread (item insert from A-Z)
+Producer Thread (put item)
 *----------------------------------------------------------------------------*/
 void Producer_Thread (void const *argument) 
 {
-	for(i=0; i<loopcount; i++){
+	for(i=0; i<INPUT_SIZE; i++){
 		put(INPUT[i]);
 	}
 }
 /*----------------------------------------------------------------------------
-Consumer Thread (get item from A-Z)
+Consumer Thread (get item)
 *----------------------------------------------------------------------------*/
 void Consumer_Thread (void const *argument) 
 {
-	for(j=0; j<loopcount; j++){
+	for(j=0; j<INPUT_SIZE; j++){
 		unsigned int data = 0x00;
-		long int check = 0;
-		check = j%8;
 		
 		data = get();
 		OUTPUT[j] = data ;
-		SendChar('G');
-		SendChar(sym);
-		SendChar(data);
-		SendChar('\n');	
-		
-		if (data==buffer[check]) // test for value get from queue same with item put into queue
-		{
-			SendChar('o');
-			SendChar('k');
-			SendChar('\n');
-		}
+		SendChar(data);	
 	}
+	SendChar('\n');
 	check_in_out(INPUT,OUTPUT);
 }
 /*----------------------------------------------------------------------------
@@ -195,5 +182,4 @@ int main (void)
 	osKernelStart ();                         // start thread execution 
 		
 }
-
 
